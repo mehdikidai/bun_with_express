@@ -1,10 +1,9 @@
 import express from "express";
 import auth from "../middleware/auth.middleware";
+import homeController from "../controllers/home.controller";
 
 const router = express.Router();
 
-router.get("/", auth, (req, res) => {
-  res.json({ message: `Welcome to the Home Page, ${req.user?.username}!` });
-});
+router.get("/", auth, homeController.getHome);
 
 export default router;

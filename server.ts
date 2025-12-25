@@ -1,7 +1,7 @@
 import express from "express";
-import BooksRouter from "./routers/books.routers";
-import HomeRouter from "./routers/home.routers";
-import LoginRouter from "./routers/login.routers";
+import BooksRouter from "./src/routers/books.routers";
+import HomeRouter from "./src/routers/home.routers";
+import LoginRouter from "./src/routers/login.routers";
 
 
 const PORT = Number(Bun.env.PORT) || 8080;
