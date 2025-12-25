@@ -4,8 +4,8 @@ import HomeRouter from "./routers/home.routers";
 import LoginRouter from "./routers/login.routers";
 
 
+const PORT = Number(Bun.env.PORT) || 8080;
 const app = express();
-const port = Number(Bun.env.PORT) || 8080;
 
 app.use(express.json());
 
@@ -15,6 +15,6 @@ app.use("/books", BooksRouter);
 app.use("/login", LoginRouter);
 
 // app listen
-app.listen(port, () => {
-  console.log(`Listening on port ${port}...`);
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}...`);
 });
