@@ -1,12 +1,12 @@
-import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import Config from "../configs/app.config";
+import type { Request, Response, NextFunction } from "express";
 import type { JwtPayload } from "jsonwebtoken";
+
 
 export default function auth(req: Request, res: Response, next: NextFunction) {
   
   const authHeader = req.headers.authorization as string;
-
-  const JWT_SECRET = process.env.JWT_SECRET as string;
 
   if (!authHeader || !authHeader.startsWith("Bearer "))
     return res.status(401).json({ message: "No token provided" });
@@ -15,7 +15,7 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
 
   try {
 
-    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, Config.JWT_SECRET) as JwtPayload;
     req.user = decoded;
     return next();
 
