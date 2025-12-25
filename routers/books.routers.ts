@@ -1,4 +1,5 @@
 import express from "express";
+import auth from "../middleware/auth";
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ const Books = [
   { id: 3, title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
 ];
 
-router.get("/", (req, res) => {
+router.get("/", auth, (req, res) => {
   res.json(Books);
 });
 
