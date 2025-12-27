@@ -1,24 +1,23 @@
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import Config from "../configs/app.config";
 import type { Request, Response } from "express";
 import type { LoginRequestBody } from "../types/Login";
+import Auth from "../core/helper/auth.helper";
 
 class AuthController {
-  async login(req: Request, res: Response) {
+  static async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body as LoginRequestBody;
 
-      if (email !== "admin@gmail.com" || !password)
+      if (!email || !password)
         return res.status(401).json({ message: "Invalid credentials" });
 
-      const passwordHash = await bcrypt.hash("password", 10); // for testing
-      const isValid = await bcrypt.compare(password, passwordHash);
+      const user = await Auth.attempt(email, password);
 
-      if (!isValid)
+      if (!user)
         return res.status(401).json({ message: "Invalid credentials" });
 
-      const token = jwt.sign({ email }, Config.JWT_SECRET, {
+      const token = jwt.sign({ email, name: user.name }, Config.JWT_SECRET, {
         expiresIn: "1h",
       });
 
@@ -34,4 +33,4 @@ class AuthController {
   }
 }
 
-export default new AuthController();
+export default AuthController;
