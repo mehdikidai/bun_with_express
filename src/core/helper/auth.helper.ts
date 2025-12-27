@@ -9,9 +9,21 @@ type UserRow = RowDataPacket & {
   password: string;
 };
 
-class Auth {
+type AuthenticatedUser = {
+  id: number;
+  name: string;
+  email: string;
+};
 
-  static async attempt(email: string, password: string) {
+class Auth {
+  /**
+   * Attempt to authenticate a user with email and password
+   * @param email User's email
+   * @param password User's password
+   * @returns User object without password if valid, otherwise null
+   */
+  static async attempt(email: string, password: string) : Promise<AuthenticatedUser | null> {
+    // Fetch user by email
     const [rows] = await db.execute<UserRow[]>(
       "SELECT id, name, email, password FROM users WHERE email = ?",
       [email]
@@ -19,18 +31,19 @@ class Auth {
 
     if (!rows.length) return null;
 
-    const user = rows[0];
+    const user = rows[0] as UserRow;
 
-    if (!user) return null;
-
+    // Check if password matches
     const isValid = await Hash.check(password, user.password);
     if (!isValid) return null;
 
-    const { password: _, ...safeUser } = user;
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
 
-    return safeUser;
   }
-  
 }
 
 export default Auth;
