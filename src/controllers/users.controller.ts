@@ -4,6 +4,7 @@ import User from "../model/user.model";
 import type { Request, Response } from "express";
 
 class UsersController {
+
   static async getAllUsers(req: Request, res: Response) {
     const users = await User.all();
     res.json(users);
@@ -30,6 +31,7 @@ class UsersController {
     const userId = await User.create({ name, email, password: passwordHash });
     res.status(201).json({ id: userId, name, email });
   }
+  
 }
 
 export default UsersController;

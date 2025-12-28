@@ -3,16 +3,22 @@ import Config from "../configs/app.config";
 import type { Request, Response } from "express";
 import type { LoginRequestBody } from "../types/Login";
 import Auth from "../core/helper/auth.helper";
+import type { User } from "../types/user";
+
+type AuthenticatedUser = Omit<User, "password">;
 
 class AuthController {
   static async login(req: Request, res: Response) {
     try {
-      const { email, password } = req.body as LoginRequestBody;
+      const { email, password } = req.body as Partial<LoginRequestBody>;
 
       if (!email || !password)
         return res.status(401).json({ message: "Invalid credentials" });
 
-      const user = await Auth.attempt(email, password);
+      const user: AuthenticatedUser | null = await Auth.attempt(
+        email,
+        password
+      );
 
       if (!user)
         return res.status(401).json({ message: "Invalid credentials" });

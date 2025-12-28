@@ -1,19 +1,12 @@
 import type { RowDataPacket } from "mysql2";
+import type { User } from "../../types/user";
+
 import db from "../../database/db";
 import Hash from "../../core/helper/hash.helper";
 
-type UserRow = RowDataPacket & {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-};
+type UserRow = RowDataPacket & User;
+type AuthenticatedUser = Omit<User, "password">;
 
-type AuthenticatedUser = {
-  id: number;
-  name: string;
-  email: string;
-};
 
 class Auth {
   /**
@@ -35,6 +28,7 @@ class Auth {
 
     // Check if password matches
     const isValid = await Hash.check(password, user.password);
+    
     if (!isValid) return null;
 
     return {
